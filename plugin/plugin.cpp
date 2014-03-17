@@ -509,11 +509,10 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	 * plugin filename, without dll/so/dylib suffix
 	 * e.g. for "test_plugin.dll", icon "1.png" is loaded from <TeamSpeak 3 Client install dir>\plugins\test_plugin\1.png
 	 */
-
-	BEGIN_CREATE_MENUS(2);  /* IMPORTANT: Number of menu items must be correct! */
+	BEGIN_CREATE_MENUS(2)
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_CHANNEL_COPY, "Copy Channel", "1.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_CHANNEL_PASTE, "Paste Channel", "2.png");
-	END_CREATE_MENUS;  /* Includes an assert checking if the number of menu items matched */
+	END_CREATE_MENUS;
 
 	/*
 	 * Specify an optional icon for the plugin. This icon is used for the plugins submenu within context and main menus
