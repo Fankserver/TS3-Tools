@@ -482,8 +482,8 @@ static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, c
  * These IDs are freely choosable by the plugin author. It's not really needed to use an enum, it just looks prettier.
  */
 enum {
-	MENU_ID_CHANNEL_COPY = 1,
-	MENU_ID_CHANNEL_PASTE
+	MENU_ID_CLIENT_GETDETAILINFORMATION = 1,
+	MENU_ID_CHANNEL_GETDETAILINFORMATION
 };
 
 /*
@@ -510,8 +510,8 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	 * e.g. for "test_plugin.dll", icon "1.png" is loaded from <TeamSpeak 3 Client install dir>\plugins\test_plugin\1.png
 	 */
 	BEGIN_CREATE_MENUS(2)
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_CHANNEL_COPY, "Copy Channel", "1.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_CHANNEL_PASTE, "Paste Channel", "2.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_GETDETAILINFORMATION, "Client Informations", "1.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_CHANNEL_GETDETAILINFORMATION, "Channel Informations", "2.png");
 	END_CREATE_MENUS;
 
 	/*
@@ -1026,10 +1026,21 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 		case PLUGIN_MENU_TYPE_CHANNEL: {
 			/* Channel contextmenu item was triggered. selectedItemID is the channelID of the selected channel */
 			switch (menuItemID) {
-				case MENU_ID_CHANNEL_COPY: {
-					break;
-				}
-				case MENU_ID_CHANNEL_PASTE: {
+				case MENU_ID_CHANNEL_GETDETAILINFORMATION: {
+					int errorCode;
+					char *channelName;
+					if ((errorCode = ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, selectedItemID, CHANNEL_NAME, &channelName)) != ERROR_ok) {
+
+					}
+
+					std::wstringstream dialogMessage;
+					dialogMessage << "ChannelId: " << selectedItemID << "\n";
+					dialogMessage << "ChannelName: " << channelName << "\n";
+					MessageBox(NULL, dialogMessage.str().c_str(), L"Channel information", MB_ICONINFORMATION | MB_OK);
+
+					if (channelName != NULL) {
+						ts3Functions.freeMemory(channelName);
+					}
 					break;
 				}
 				default: {
@@ -1038,6 +1049,16 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 				}
 			}
 			break;
+		}
+		case PLUGIN_MENU_TYPE_CLIENT: {
+			switch (menuItemID) {
+				case MENU_ID_CLIENT_GETDETAILINFORMATION: {
+					break;
+				}
+				default: {
+					ts3Functions.logMessage("Unkown onMenuItemEvent item 'menuItemID'", LogLevel_WARNING, "TeamSpeak3Tools", serverConnectionHandlerID);
+				}
+			}
 		}
 		default: {
 			ts3Functions.logMessage("Unkown onMenuItemEvent item 'type'", LogLevel_WARNING, "TeamSpeak3Tools", serverConnectionHandlerID);

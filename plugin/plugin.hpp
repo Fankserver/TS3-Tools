@@ -145,4 +145,8 @@ PLUGINS_EXPORTDLL void ts3plugin_onHotkeyRecordedEvent(const char* keyword, cons
 }
 #endif
 
+#include <string>
+#include <iostream>
+#include <sstream>
+
 #endif
